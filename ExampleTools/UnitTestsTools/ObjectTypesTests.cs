@@ -57,7 +57,6 @@ namespace UnitTestsTools
             Assert.That(tmpVarStruct.NameObject == "ChangedTest1Name");
             Assert.That(tmpVarClass == null);
             Assert.That(objClass == null);
-
         }
 
         /* This is of particular interest when passing parameters to methods.
