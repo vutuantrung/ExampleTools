@@ -7,44 +7,28 @@ namespace AlgoExercices
 {
     public class Ex1_2
     {
-        public static void RemoveDuplicate(Node list)
+        public static void RemoveDuplicate(ref Node head)
         {
-            if (list != null)
-            {
-                Node iterator1 = list;
-                while (iterator1._next != null)
-                {
-                    Node iterator2 = iterator1.Next;
-                    while (iterator2.Next != null)
-                    {
-                        Node prevNode = null;
+            if (head == null) throw new ArgumentNullException("Head not found.");
 
-                        if (IsDuplicate(iterator1, iterator2))
-                        {
-                            if (iterator2 == iterator1.Next)
-                            {
-                                prevNode = iterator1;
-                            }
-                            // Detele node
-                            prevNode.Next = iterator2.Next;
-                        }
-                        else
-                        {
-                            prevNode = iterator2;
-                        }
-                        iterator2 = iterator2.Next;
+            Node current = head;
+            Node iterator = current;
+
+            while (current != null)
+            {
+                while (iterator.Next != null)
+                {
+                    if (IsDuplicate(iterator.Next, current))
+                    {
+                        iterator.Next = iterator.Next.Next;
                     }
-                    iterator1 = iterator1.Next;
+                    iterator = iterator.Next;
                 }
+                current = current.Next;
             }
         }
 
-        public static bool IsDuplicate(Node e1, Node e2)
-        {
-            return e1._value == e2._value;
-        }
-
-        public static void RemoveDuplicateWithBuffer(Node list)
+        public static void RemoveDuplicateWithBuffer(ref Node list)
         {
             int count = 0;
             List<int> intList = new List<int>();
@@ -63,81 +47,68 @@ namespace AlgoExercices
                 iterator = iterator.Next;
             }
         }
+
+        public static bool IsDuplicate(Node e1, Node e2) => e1.Value == e2.Value;
     }
 
     public class Ex2_2
     {
         public static int GetValueIntAtv1(Node head, int idx)
         {
+            if (head == null) throw new ArgumentNullException("Head not found.");
+            if (idx < 0) throw new ArgumentOutOfRangeException("Invalid index.");
+
+            int listLength = LinkedListHelper.GetLinkedListLength(head);
+            if (idx > listLength) throw new ArgumentOutOfRangeException("Index is out of range.");
+
             Node ref1 = head;
-            if (idx < LinkedListHelper.GetLinkedListLength(head))
+            Node ref2 = head;
+
+            for (int i = 0; i < idx; i++) ref1 = ref1.Next;
+            while (ref1 != null)
             {
-                for (int i = 0; i < idx; i++) ref1 = ref1.Next;
-                Node ref2 = head;
-                while (ref1 != null)
-                {
-                    ref1 = ref1.Next;
-                    ref2 = ref2.Next;
-                }
-                return ref2.Value;
+                ref1 = ref1.Next;
+                ref2 = ref2.Next;
             }
-            return 0;
+            return ref2.Value;
         }
 
         public static int GetValueIntAtv2(Node head, int idx)
         {
-            int listLength = LinkedListHelper.GetLinkedListLength(head);
-            if (idx < LinkedListHelper.GetLinkedListLength(head))
-            {
-                Node iterator = head;
+            if (head == null) throw new ArgumentNullException("Head not found.");
+            if (idx < 0) throw new ArgumentOutOfRangeException("Invalid index.");
 
-                int count = listLength - idx;
-                for (int i = 0; i < count; i++)
-                {
-                    iterator = iterator.Next;
-                }
-                return iterator.Value;
+            int listLength = LinkedListHelper.GetLinkedListLength(head);
+            if (idx > listLength) throw new ArgumentOutOfRangeException("Index is out of range.");
+
+            Node iterator = head;
+            int count = listLength - idx;
+            for (int i = 0; i < count; i++)
+            {
+                iterator = iterator.Next;
             }
-            return 0;
+            return iterator.Value;
         }
     }
 
     public class Ex3_2
     {
-        public static void Removev1(Node item)
+        public static void Removev1(ref Node head)
         {
-            while (item.Next.Next != null)
-            {
-                item.Value = item.Next.Value;
-                item = item.Next;
-            }
+            if (head == null) return;
 
-            item.Value = item.Next.Value;
-            item.Next = null;
-        }
-
-        public static void Removev2(ref Node head, int value)
-        {
-            int idx = 0;
-            Node iterator = head;
-            while (iterator != null)
+            while (head.Next.Next != null)
             {
-                if (iterator.Value == value)
-                {
-                    LinkedListHelper.DeleteNodeAtIndex(ref head, idx);
-                }
-                else
-                {
-                    idx++;
-                }
-                iterator = iterator.Next;
+                head.Value = head.Next.Value;
+                head = head.Next;
             }
+            head.Value = head.Next.Value;
         }
     }
 
     public class Ex4_2
     {
-        public static void Partition(ref Node list, int pivot)
+        public static void Partition_v1(ref Node list, int pivot)
         {
             List<int> lowerValuesList = new List<int>();
             List<int> greaterValuesList = new List<int>();
@@ -177,11 +148,41 @@ namespace AlgoExercices
                 }
             }
         }
+
+        public static void Partition_v2(ref Node head, int pivot)
+        {
+            Node lastNode = head;
+
+            while (lastNode.Next != null) lastNode = lastNode.Next;
+
+            while (head.Value >= pivot)
+            {
+                Node newLastNode = new Node(head.Value);
+                lastNode.Next = newLastNode;
+                lastNode = newLastNode;
+                head = head.Next;
+            }
+
+            Node iterator = head;
+            while (iterator.Next != null && iterator.Next.Next != null)
+            {
+                Node prevNode = iterator;
+                iterator = iterator.Next;
+                if (iterator.Value >= pivot)
+                {
+                    Node newLastNode = new Node(iterator.Value);
+                    lastNode.Next = newLastNode;
+                    lastNode = newLastNode;
+
+                    prevNode.Next = iterator.Next;
+                }
+            }
+        }
     }
 
     public class Ex5_2
     {
-        public static Node Addition1(Node list1, Node list2)
+        public static Node Addition1_v1(Node list1, Node list2)
         {
             Node result = null;
             Node iterator = result;
@@ -207,7 +208,7 @@ namespace AlgoExercices
             return result;
         }
 
-        public static Node Addition2(Node list1, Node list2)
+        public static Node Addition2_v1(Node list1, Node list2)
         {
             Node result = null;
             Node iterator = result;
@@ -260,87 +261,136 @@ namespace AlgoExercices
             }
             return 0;
         }
+
+        public static Node Addition1_v2(Node h1, Node h2)
+        {
+            int val1 = 0, val2 = 0;
+            int idx = 0;
+            while (h1 != null)
+            {
+                val1 += h1.Value * (int)Math.Pow(10, idx);
+                idx++;
+            }
+
+            idx = 0;
+            while (h2 != null)
+            {
+                val2 += h2.Value * (int)Math.Pow(10, idx);
+                idx++;
+            }
+            string result = (val1 + val2).ToString();
+
+            Node headRes = null;
+            Node iterator = headRes;
+            for (int i = 0; i < result.Length; i++)
+            {
+                if (headRes == null)
+                {
+                    headRes = new Node(result[i]);
+                }
+                else
+                {
+                    iterator.Next = new Node(result[i]);
+                    iterator = iterator.Next;
+                }
+            }
+            return headRes;
+        }
+
+        public static Node Addition2_v2(Node h1, Node h2)
+        {
+            int val1 = 0, val2 = 0;
+            int idx = LinkedListHelper.GetLinkedListLength(h1) - 1;
+            while (h1 != null)
+            {
+                val1 += h1.Value * (int)Math.Pow(10, idx);
+                idx--;
+            }
+
+            idx = LinkedListHelper.GetLinkedListLength(h2) - 1;
+            while (h2 != null)
+            {
+                val2 += h2.Value * (int)Math.Pow(10, idx);
+                idx--;
+            }
+            string result = (val1 + val2).ToString();
+
+            Node headRes = null;
+            Node iterator = headRes;
+            for (int i = 0; i < result.Length; i++)
+            {
+                if (headRes == null)
+                {
+                    headRes = new Node(result[i]);
+                }
+                else
+                {
+                    iterator.Next = new Node(result[i]);
+                    iterator = iterator.Next;
+                }
+            }
+            return headRes;
+        }
     }
 
     public class Ex6_2
     {
-        public static bool IsPalindrome(Node list)
+        public static bool IsPalindrome(Node head)
         {
-            if (list != null)
+            if (head == null || head.Next == null) return false;
+
+            Node iterator = head;
+            int linkedListLength = LinkedListHelper.GetLinkedListLength(head);
+            //Stack<int> intStack = new Stack<int>();
+            int[] intStack = new int[linkedListLength / 2];
+            int count = 0, i = -1;
+            bool paired = linkedListLength % 2 == 0;
+            if (paired)
             {
-                if (list.Next == null)
+                while (iterator != null)
                 {
-                    return true;
-                }
-                else
-                {
-                    Node iterator = list;
-                    int linkedListLength = LinkedListHelper.GetLinkedListLength(list);
-                    //Stack<int> intStack = new Stack<int>();
-                    int[] intStack = new int[linkedListLength / 2];
-                    int count = 0, i = -1;
-                    bool paired = linkedListLength % 2 == 0;
-                    if (paired)
+                    if (count >= linkedListLength / 2)
                     {
-                        while (iterator != null)
-                        {
-                            if (count >= linkedListLength / 2)
-                            {
-                                if (intStack[i] != iterator.Value)
-                                {
-                                    return false;
-                                }
-                                else
-                                {
-                                    i--;
-                                }
-                            }
-                            else
-                            {
-                                intStack[count] = iterator.Value;
-                                count++;
-                                i++;
-                            }
-                            iterator = iterator.Next;
-                        }
-                        return true;
+                        if (intStack[i] != iterator.Value) return false;
+                        i--;
                     }
                     else
                     {
-                        bool first = true;
-                        while (iterator != null)
-                        {
-                            if (count >= linkedListLength / 2)
-                            {
-                                if (first)
-                                {
-                                    first = false;
-                                }
-                                else
-                                {
-                                    if (intStack[i] != iterator.Value)
-                                    {
-                                        return false;
-                                    }
-                                    else
-                                    {
-                                        i--;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                intStack[count] = iterator.Value;
-                                count++;
-                                i++;
-                            }
-                            iterator = iterator.Next;
-                        }
-                        return true;
+                        intStack[count] = iterator.Value;
+                        count++;
+                        i++;
                     }
+                    iterator = iterator.Next;
                 }
+                return true;
             }
-            return false;
+            else
+            {
+                bool first = true;
+                while (iterator != null)
+                {
+                    if (count >= linkedListLength / 2)
+                    {
+                        if (first)
+                        {
+                            first = false;
+                        }
+                        else
+                        {
+                            if (intStack[i] != iterator.Value) return false;
+                            i--;
+                        }
+                    }
+                    else
+                    {
+                        intStack[count] = iterator.Value;
+                        count++;
+                        i++;
+                    }
+                    iterator = iterator.Next;
+                }
+                return true;
+            }
         }
     }
 

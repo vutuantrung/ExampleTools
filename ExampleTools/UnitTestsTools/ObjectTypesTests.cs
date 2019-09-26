@@ -17,8 +17,8 @@ namespace UnitTestsTools
             Assert.That(objStruct.Type == "Value");
 
             ObjectClass objClass = new ObjectClass("Class0");
-            Assert.That(objStruct.NameObject == "Class0");
-            Assert.That(objStruct.Type == "Reference");
+            Assert.That(objClass.NameObject == "Class0");
+            Assert.That(objClass.Type == "Reference");
         }
 
         [Test]

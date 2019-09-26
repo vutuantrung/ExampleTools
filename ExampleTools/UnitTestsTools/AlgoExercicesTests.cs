@@ -2,11 +2,11 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace UnitTestsTools
 {
-    [TestFixture]
     class TestsAlgoSect1
     {
         [TestCase("abadsadf", false)]
@@ -110,7 +110,6 @@ namespace UnitTestsTools
         }
     }
 
-    [TestFixture]
     class TestsAlgoSect2
     {
         [TestCase(new int[] { 1, 2, 3, 4 }, new int[] { 1, 2, 3, 4 })]
@@ -118,11 +117,21 @@ namespace UnitTestsTools
         [TestCase(new int[] { 1, 1, 2, 3, 4, 1, 2, 3, 2, 4 }, new int[] { 1, 2, 3, 4 })]
         public void TestEx1_2(int[] input, int[] expected)
         {
-            Node linkedList = LinkedListHelper.CreateIntLinkedList(input);
-            Ex1_2.RemoveDuplicateWithBuffer(linkedList);
-            int[] result = LinkedListHelper.ToIntArray(linkedList);
+            {
+                Node linkedList = LinkedListHelper.CreateIntLinkedList(input);
+                Ex1_2.RemoveDuplicateWithBuffer(ref linkedList);
+                int[] result_1 = LinkedListHelper.ToIntArray(linkedList);
 
-            CollectionAssert.AreEqual(expected, result);
+                CollectionAssert.AreEqual(expected, result_1);
+            }
+
+            {
+                Node linkedList = LinkedListHelper.CreateIntLinkedList(input);
+                Ex1_2.RemoveDuplicate(ref linkedList);
+                int[] result_1 = LinkedListHelper.ToIntArray(linkedList);
+
+                CollectionAssert.AreEqual(expected, result_1);
+            }
         }
 
         [TestCase(new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }, 5, 6)]
@@ -145,27 +154,66 @@ namespace UnitTestsTools
         [TestCase(new int[] { 1, 23, 52, 63, 7, 37, 8, 6, 10 }, 10, new int[] { 1, 23, 52, 63, 7, 37, 8, 6 })]
         public void TestEx3_2(int[] input, int value, int[] expected)
         {
-            //Node listEx1 = LinkedListHelper.CreateIntLinkedList(input);
-            //Exercise3.Removev1(listEx1.Next.Next.Next);
             Node listEx2 = LinkedListHelper.CreateIntLinkedList(input);
-            Ex3_2.Removev2(ref listEx2, value);
-            //Node listEx3 = LinkedListHelper.CreateIntLinkedList(input);
-            //Exercise3.Removev3(listEx3.Next.Next.Next);
+            Ex3_2.Removev1(ref listEx2);
 
             int[] result = LinkedListHelper.ToIntArray(listEx2);
             CollectionAssert.AreEqual(result, expected);
         }
 
-        [TestCase(new int[] { 3, 5, 12, 4, 7, 1, 13 }, 6, new int[] { 3, 5, 4, 1, 12, 7, 13 })]
-        [TestCase(new int[] { 3, 5, 12, 4, 7, 1, 13 }, 10, new int[] { 3, 5, 4, 7, 1, 12, 13 })]
-        [TestCase(new int[] { 3, 5, 12, 4, 7, 1, 13 }, 0, new int[] { 3, 5, 12, 4, 7, 1, 13 })]
-        [TestCase(new int[] { 3, 5, 12, 4, 7, 1, 13 }, 15, new int[] { 3, 5, 12, 4, 7, 1, 13 })]
-        public void TestEx4_2(int[] input, int pivot, int[] expected)
+        [TestCase(new int[] { 3, 5, 12, 4, 7, 1, 13 }, 6, new int[] { 3, 5, 4, 1 }, new int[] { 12, 7, 13 })]
+        [TestCase(new int[] { 3, 5, 12, 4, 7, 1, 13 }, 10, new int[] { 3, 5, 4, 7, 1 }, new int[] { 12, 13 })]
+        [TestCase(new int[] { 3, 5, 12, 4, 7, 1, 13 }, 0, new int[] { 3, 5, 12, 4, 7, 1, 13 }, new int[] { })]
+        [TestCase(new int[] { 3, 5, 12, 4, 7, 1, 13 }, 15, new int[] { }, new int[] { 3, 5, 12, 4, 7, 1, 13 })]
+        public void TestEx4_2(int[] input, int pivot, int[] smallerArr, int[] biggerArr)
         {
-            Node list = LinkedListHelper.CreateIntLinkedList(input);
-            Ex4_2.Partition(ref list, pivot);
-            int[] result = LinkedListHelper.ToIntArray(list);
-            CollectionAssert.AreEqual(result, expected);
+            {
+                Node head = LinkedListHelper.CreateIntLinkedList(input);
+                Ex4_2.Partition_v1(ref head, pivot);
+                Node iterator = head;
+                int countSmaller = 0;
+                int countBigger = 0;
+                while (iterator != null)
+                {
+                    if (iterator.Value >= pivot)
+                    {
+                        countSmaller++;
+                        Assert.That(biggerArr.Contains(iterator.Value));
+                    }
+                    else
+                    {
+                        countBigger++;
+                        Assert.That(smallerArr.Contains(iterator.Value));
+                    }
+                    iterator = iterator.Next;
+                }
+                Assert.That(smallerArr.Length == countSmaller);
+                Assert.That(biggerArr.Length == countBigger);
+            }
+
+            {
+                Node head = LinkedListHelper.CreateIntLinkedList(input);
+                Ex4_2.Partition_v2(ref head, pivot);
+                Node iterator = head;
+                int countSmaller = 0;
+                int countBigger = 0;
+                while (iterator != null)
+                {
+                    if (iterator.Value >= pivot)
+                    {
+                        countSmaller++;
+                        Assert.That(biggerArr.Contains(iterator.Value));
+                    }
+                    else
+                    {
+                        countBigger++;
+                        Assert.That(smallerArr.Contains(iterator.Value));
+                    }
+                    iterator = iterator.Next;
+                }
+                Assert.That(smallerArr.Length == countSmaller);
+                Assert.That(biggerArr.Length == countBigger);
+            }
         }
 
         [TestCase(new int[] { 2, 3, 4 }, new int[] { 1, 2, 5 }, new int[] { 3, 5, 9 }, new int[] { 3, 5, 9 })]
@@ -176,10 +224,16 @@ namespace UnitTestsTools
         {
             Node list1 = LinkedListHelper.CreateIntLinkedList(input1);
             Node list2 = LinkedListHelper.CreateIntLinkedList(input2);
-            Node result1 = Ex5_2.Addition1(list1, list2);
-            Node result2 = Ex5_2.Addition2(list1, list2);
-            CollectionAssert.AreEqual(LinkedListHelper.ToIntArray(result1), expected1);
-            CollectionAssert.AreEqual(LinkedListHelper.ToIntArray(result2), expected2);
+
+            Node result1_1 = Ex5_2.Addition1_v1(list1, list2);
+            Node result2_1 = Ex5_2.Addition2_v1(list1, list2);
+            CollectionAssert.AreEqual(LinkedListHelper.ToIntArray(result1_1), expected1);
+            CollectionAssert.AreEqual(LinkedListHelper.ToIntArray(result2_1), expected2);
+
+            Node result1_2 = Ex5_2.Addition1_v2(list1, list2);
+            Node result2_2 = Ex5_2.Addition2_v2(list1, list2);
+            CollectionAssert.AreEqual(LinkedListHelper.ToIntArray(result1_2), expected1);
+            CollectionAssert.AreEqual(LinkedListHelper.ToIntArray(result2_2), expected2);
         }
 
         [TestCase(new int[] { 1, 3, 5, 8, 7, 8, 5, 3, 1 }, true)]
