@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AlgoExercices\AlgoExercices.csproj" />
     <ProjectReference Include="..\ToolClasses\ToolClasses.csproj" />
   </ItemGroup>
 
