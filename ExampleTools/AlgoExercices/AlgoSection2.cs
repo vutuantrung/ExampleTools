@@ -335,7 +335,7 @@ namespace AlgoExercices
 
     public class Ex6_2
     {
-        public static bool IsPalindrome(Node head)
+        public static bool IsPalindrome_v1(Node head)
         {
             if (head == null || head.Next == null) return false;
 
@@ -392,81 +392,133 @@ namespace AlgoExercices
                 return true;
             }
         }
+
+        public static bool IsPalindrome_v2(Node head)
+        {
+            Node iterator = head;
+
+            if (iterator == null) throw new ArgumentNullException("Head not found.");
+
+            int length = LinkedListHelper.GetLinkedListLength(head);
+            int idx = 0, endIdx = 0, startIdx = 0;
+            int[] buffer;
+            bool isEven = length % 2 == 0;
+            bool isPalindome = true;
+
+            if (isEven)
+            {
+                buffer = new int[length / 2 - 1];
+                endIdx = length / 2 - 1;
+                startIdx = length / 2;
+            }
+            else
+            {
+                buffer = new int[(length - 1) / 2 - 1];
+                endIdx = (length - 1) / 2 - 1;
+                startIdx = (length - 1) / 2 + 1;
+            }
+
+            while (iterator != null)
+            {
+                if (idx <= endIdx)
+                {
+                    buffer[idx] = iterator.Value;
+                    idx++;
+                }
+                else if (idx >= startIdx)
+                {
+                    idx--;
+                    if (buffer[idx] != iterator.Value) return false;
+                }
+                else
+                {
+                    idx++;
+                }
+
+                iterator = iterator.Next;
+            }
+
+            return isPalindome;
+        }
     }
 
     public class Ex7_2
     {
         public static Node GetIntersection(Node list1, Node list2)
         {
-            if (list1 != null && list2 != null)
+            if (list1 == null || list2 == null) return null;
+
+            int length1 = LinkedListHelper.GetLinkedListLength(list1);
+            int length2 = LinkedListHelper.GetLinkedListLength(list2);
+            Node iterator1 = length1 <= length2 ? list1 : list2;
+            Node iterator2 = length1 <= length2 ? list2 : list1;
+
+            Node result = null;
+            Node iterator3 = result;
+            while (iterator1 != null)
             {
-                int length1 = LinkedListHelper.GetLinkedListLength(list1);
-                int length2 = LinkedListHelper.GetLinkedListLength(list2);
-                Node iterator1 = list1;
-                Node iterator2 = list2;
-                Node result = null;
-                Node iterator3 = result;
-                if (length1 <= length2)
+                iterator2 = list2;
+                while (iterator2 != null)
                 {
-                    while (iterator1 != null)
+                    if (iterator1.Value == iterator2.Value)
                     {
-                        iterator2 = list2;
-                        while (iterator2 != null)
+                        if (iterator3 == null)
                         {
-                            if (iterator1.Value == iterator2.Value)
-                            {
-                                if (iterator3 == null)
-                                {
-                                    iterator3 = new Node(iterator1.Value);
-                                    result = iterator3;
-                                }
-                                else
-                                {
-                                    iterator3.Next = new Node(iterator1.Value);
-                                    iterator3 = iterator3.Next;
-                                }
-                                iterator2 = iterator2.Next;
-                                list1 = iterator1;
-                                list2 = iterator2;
-                                break;
-                            }
-                            iterator2 = iterator2.Next;
+                            iterator3 = new Node(iterator1.Value);
+                            result = iterator3;
                         }
-                        iterator1 = iterator1.Next;
+                        else
+                        {
+                            iterator3.Next = new Node(iterator1.Value);
+                            iterator3 = iterator3.Next;
+                        }
+                        iterator2 = iterator2.Next;
+                        list1 = iterator1;
+                        list2 = iterator2;
+                        break;
                     }
-                    return result;
+                    else
+                    {
+                        if (result != null)
+                        {
+                            return result;
+                        }
+                    }
+                    iterator2 = iterator2.Next;
+                }
+                iterator1 = iterator1.Next;
+            }
+            return result;
+        }
+    }
+
+    public class Ex8_2
+    {
+        public static Node IsCircle(Node head)
+        {
+            Node iterator = head;
+
+            if (iterator == null) return null;
+
+            int idx = 0;
+            int length = LinkedListHelper.GetLinkedListLength(head);
+            int[] buffer = new int[length];
+
+            while(iterator != null)
+            {
+                if (!buffer.Contains(iterator.Value))
+                {
+                    buffer[idx] = iterator.Value;
+                    idx++;
                 }
                 else
                 {
-                    while (iterator2 != null)
-                    {
-                        iterator1 = list1;
-                        while (iterator1 != null)
-                        {
-                            if (iterator1.Value == iterator2.Value)
-                            {
-                                if (iterator3 == null)
-                                {
-                                    iterator3 = new Node(iterator1.Value);
-                                    result = iterator3;
-                                }
-                                else
-                                {
-                                    iterator3.Next = new Node(iterator1.Value);
-                                    iterator3 = iterator3.Next;
-                                }
-                                iterator1 = iterator1.Next;
-                                list1 = iterator1;
-                                list2 = iterator2;
-                                break;
-                            }
-                            iterator1 = iterator1.Next;
-                        }
-                        iterator2 = iterator2.Next;
-                    }
-                    return result;
+                    return iterator;
                 }
+
+                iterator = iterator.Next;
             }
+
             return null;
         }
     }

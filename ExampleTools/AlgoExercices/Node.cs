@@ -6,8 +6,8 @@ namespace AlgoExercices
 {
     public class Node
     {
-        public Node _next;
-        public int _value;
+        Node _next;
+        int _value;
 
         public Node(int value)
         {

@@ -243,8 +243,10 @@ namespace UnitTestsTools
         public void TestEx6_2(int[] input, bool expected)
         {
             Node list = LinkedListHelper.CreateIntLinkedList(input);
-            bool result = Ex6_2.IsPalindrome(list);
-            Assert.That(expected, Is.EqualTo(result));
+            bool result_1 = Ex6_2.IsPalindrome_v1(list);
+            bool result_2 = Ex6_2.IsPalindrome_v2(list);
+            Assert.That(expected, Is.EqualTo(result_1));
+            Assert.That(expected, Is.EqualTo(result_2));
         }
 
         [TestCase(new int[] { 1, 3, 5, 8, 7, 6, 2 }, new int[] { 1, 5, 7, 6, 11 }, new int[] { 1, 5, 7, 6 })]
