@@ -468,5 +468,44 @@ namespace AlgoExercices
     public class Ex5_3
     {
 
+        public Ex5_3()
+        {
+
+        }
+
+        public void Enqueue(Animal animal)
+        {
+
+        }
+
+        public Animal DequeueAny()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Dog DequeueDog()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Cat DequeueCat()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class Animal
+    {
+
+    }
+
+    public class Dog : Animal
+    {
+
+    }
+
+    public class Cat : Animal
+    {
+
     }
 }
