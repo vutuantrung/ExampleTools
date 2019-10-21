@@ -3,13 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DataStructures.Part1
+namespace DataStructures.Part1.SingleLinkedList
 {
     public class LList<T> : ICollection<T>
     {
         int _count;
 
         private Node<T> _head;
+
         private Node<T> _tail;
 
         public Node<T> Head => _head;
