@@ -64,7 +64,6 @@ namespace DataStructures.Part1.DoubleLinkedList
             _count++;
         }
 
-
         public void Add(T item)
         {
             AddLast(item);
@@ -72,7 +71,9 @@ namespace DataStructures.Part1.DoubleLinkedList
 
         public void Clear()
         {
-            throw new NotImplementedException();
+            _count = 0;
+            _tail = null;
+            _head = null;
         }
 
         public bool Contains(T item)
