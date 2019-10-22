@@ -86,7 +86,7 @@ namespace DataStructures.Part1.DoubleLinkedList
             throw new NotImplementedException();
         }
 
-        public void RemoveFirst(T item)
+        public void RemoveFirst()
         {
             if (_count == 0) return;
             if (_count == 1)
@@ -102,7 +102,7 @@ namespace DataStructures.Part1.DoubleLinkedList
             _count--;
         }
 
-        public void RemoveLast(T item)
+        public void RemoveLast()
         {
             if (_count == 0) return;
             if (_count == 1)

@@ -46,7 +46,23 @@ namespace DataStructures.Part1.SingleLinkedList
 
         public void Add(T item)
         {
-            this.Add(new Node<T>(item));
+            Add(new Node<T>(item));
+        }
+
+        public void AddLast(T item)
+        {
+            Node<T> newNode = new Node<T>(item);
+            if (_count == 0)
+            {
+                _tail = newNode;
+                _head = newNode;
+            }
+            else
+            {
+                _tail.Next = newNode;
+                _tail = _tail.Next;
+            }
+            _count++;
         }
 
         public void Clear()
@@ -73,7 +89,7 @@ namespace DataStructures.Part1.SingleLinkedList
         public void CopyTo(T[] array, int arrayIndex)
         {
             Node<T> iterator = _head;
-            while(iterator != null)
+            while (iterator != null)
             {
                 array[arrayIndex++] = iterator.Value;
                 iterator = iterator.Next;
@@ -85,7 +101,7 @@ namespace DataStructures.Part1.SingleLinkedList
             Node<T> currNode = _head;
             Node<T> prevNode = null;
 
-            while(currNode != null)
+            while (currNode != null)
             {
                 if (!currNode.Value.Equals(item))
                 {
@@ -98,7 +114,7 @@ namespace DataStructures.Part1.SingleLinkedList
 
             if (currNode != null)
             {
-                if(prevNode == null)
+                if (prevNode == null)
                 {
                     _head = _head.Next;
                     if (_head == null) _tail = null;
@@ -114,10 +130,23 @@ namespace DataStructures.Part1.SingleLinkedList
             return true;
         }
 
+        public void RemoveFirst()
+        {
+            if (_count == 0) return;
+            if (_count == 1)
+            {
+                _tail = null;
+                _head = null;
+                return;
+            }
+
+            _head = _head.Next;
+        }
+
         public IEnumerator<T> GetEnumerator()
         {
             Node<T> iterator = _head;
-            while(iterator != null)
+            while (iterator != null)
             {
                 yield return iterator.Value;
                 iterator = iterator.Next;
