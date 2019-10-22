@@ -10,7 +10,7 @@ namespace DataStructures.Part1
         int _count;
         T[] _items;
 
-        public ArrayList() 
+        public ArrayList()
             : this(0)
         {
         }
@@ -31,68 +31,100 @@ namespace DataStructures.Part1
 
         public T this[int index]
         {
-            get => throw new NotImplementedException();
-            set => throw new NotImplementedException();
+            get
+            {
+                if(index > _count || index < 0) throw new IndexOutOfRangeException();
+                return _items[index];
+            }
+            set
+            {
+
+                if (index > _count || index < 0) throw new IndexOutOfRangeException();
+                _items[index] = value;
+            }
         }
 
-        public int Count => throw new NotImplementedException();
+        public int Count => _count;
 
-        public bool IsReadOnly => throw new NotImplementedException();
+        public bool IsReadOnly => false;
 
         public void Add(T item)
         {
-            throw new NotImplementedException();
+            if (_count == _items.Length)
+            {
+                GrowArray();
+            }
+            _items[_count++] = item;
         }
 
         public void Clear()
         {
-            throw new NotImplementedException();
+            _items = new T[0];
+            _count = 0;
         }
 
-        public bool Contains(T item)
-        {
-            throw new NotImplementedException();
-        }
+        public bool Contains(T item) => IndexOf(item) != -1;
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            throw new NotImplementedException();
+            Array.Copy(_items, 0, array, 0, _count);
         }
 
         public IEnumerator<T> GetEnumerator()
         {
-            throw new NotImplementedException();
+            for(int i = 0; i < _count; i++)
+            {
+                yield return _items[i];
+            }
         }
 
         public int IndexOf(T item)
         {
-            throw new NotImplementedException();
+            for(int i = 0; i < _count; i++)
+            {
+                if (_items[i].Equals(item))
+                {
+                    return i;
+                }
+            }
+            return -1;
         }
 
         public void Insert(int index, T item)
         {
-            if (index < 0 || index > _count) throw new IndexOutOfRangeException();
+            if (index < 0 || index >= _count) throw new IndexOutOfRangeException();
             if (_items.Length == _count)
             {
                 GrowArray();
             }
 
+            Array.Copy(_items, index, _items, index + 1, _count - index);
 
+            _items[index] = item;
+
+            _count++;
         }
 
         public bool Remove(T item)
         {
-            throw new NotImplementedException();
+            for(int i = 0; i < _count; i++)
+            {
+                if (_items[i].Equals(item))
+                {
+                    RemoveAt(i);
+                    return true;
+                }
+            }
+            return false;
         }
 
         public void RemoveAt(int index)
         {
-            throw new NotImplementedException();
+            if (index < 0 || index >= _count) throw new IndexOutOfRangeException();
+            Array.Copy(_items, index, _items, index + 1, _count - index);
+            _count--;
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }
