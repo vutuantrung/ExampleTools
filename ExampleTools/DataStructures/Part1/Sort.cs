@@ -202,7 +202,7 @@ namespace DataStructures.Part1
         {
             int sortedRangeEnd = 0;
 
-            while(sortedRangeEnd < items.Length)
+            while (sortedRangeEnd < items.Length)
             {
                 int nextIndex = FindIndexOfSamaillestValue(items, sortedRangeEnd);
                 Swap(items, sortedRangeEnd, nextIndex);
@@ -217,9 +217,9 @@ namespace DataStructures.Part1
             T smallestValue = items[sortedRangeEnd];
             int smallestValueIdx = sortedRangeEnd;
 
-            for(int i = 0; i < items.Length; i++)
+            for (int i = 0; i < items.Length; i++)
             {
-                if(smallestValue.CompareTo(items[i]) < 0)
+                if (smallestValue.CompareTo(items[i]) < 0)
                 {
                     smallestValue = items[i];
                     smallestValueIdx = i;
@@ -230,23 +230,184 @@ namespace DataStructures.Part1
         }
         #endregion
 
-
         /*  Merge Sort
          *  Complexity:
          *            Best case       Average case        Worst case
          *  Time         O(nlog(n))     O(nlog(n))          O(nlog(n))
          *  Space        O(n)           O(n)                O(n)
          * 
-         * 
-         * 
-         * 
+         *  Illusion:
+         *  We have an array: |3|8|2|1|5|4|6|7|
+         *  We devine this array to sublists, each containing one element
+         *  =>       3821
+         *  =>   3821    5467
+         *  =>  38  21  54  67
+         *  
+         *  =>  38  21      54  67  =>  38  12      45  67
+         *      ||  ||      ||  ||      ||  ||      ||  ||
+         *      --  --      --  --      --  --      --  --
+         *      g1  g2      g3  g4  =>  g1  g2      g3  g4
+         *  We'll sort elements for each group, then group 2 smallest groups in order to have a bigger group
+         *  
+         *  =>  3812        4567    =>  1238        4567
+         *      |  |        |  |        |  |        |  |
+         *      ----        ----        ----        ----
+         *       g1          g2          g1          g2
+         *  Same methode
+         *  
+         *  =>  12384567            =>  12345678
+         *      |      |                |      |
+         *      --------                --------
+         *         g1                      g1
+         *  
+         * =>   12345678
          * 
          * **/
-
         #region Merge Sort
+        public void MergeSort(T[] items)
+        {
+            if (items.Length <= 1)
+            {
+                return;
+            }
 
+            int leftSize = items.Length / 2;
+            int rightSize = items.Length - leftSize;
+
+            T[] left = new T[leftSize];
+            T[] right = new T[rightSize];
+
+            MergeSort(left);
+            MergeSort(right);
+            Merge(items, left, right);
+        }
+
+        private void Merge(T[] items, T[] left, T[] right)
+        {
+            int leftIdx = 0;
+            int rightIdx = 0;
+            int targetIdx = 0;
+
+            int remaining = left.Length + right.Length;
+
+            while (remaining > 0)
+            {
+                if (leftIdx >= left.Length)
+                {
+                    items[targetIdx] = right[rightIdx++];
+                }
+                else if (rightIdx >= right.Length)
+                {
+                    items[targetIdx] = left[leftIdx++];
+                }
+                else if (left[leftIdx].CompareTo(right[rightIdx]) < 0)
+                {
+                    items[targetIdx] = left[leftIdx++];
+                }
+                else
+                {
+                    items[targetIdx] = right[rightIdx++];
+                }
+
+                targetIdx++;
+                remaining--;
+            }
+        }
 
         #endregion
 
+        /*  Quick Sort
+         *  Complexity:
+         *            Best case       Average case        Worst case
+         *  Time         O(nlog(n))     O(nlog(n))          O(n^2)
+         *  Space        O(1)           O(1)                O(1)
+         *  
+         *  Illusion:
+         *  We have an array:   |3|7|8|5|2|1|9|5|4|
+         *  
+         *  First loop recursive:
+         *  
+         *  i---------------------------j   *
+         *  |                           |   |
+         *  3   7   8   5   2   1   9   5   4
+         *  nothing happen because items[i] = 3 < items[pivot] = 4  =>  i++;
+         *  
+         *      i-----------------------j   *
+         *      |                       |   |
+         *  3   7   8   5   2   1   9   5   4
+         *  items[i] = 7 > 4, we'll set value at i behind pivot, then replace j to i and do j--
+         *  
+         *      i-------------------j   *
+         *      |                   |   |
+         *  3   5   8   5   2   1   9   4   7
+         *  items[i] = 5 > 4, we'll set value at i behind pivot, then replace j to i and do j--
+         *  
+         *      i---------------j   *
+         *      |               |   |
+         *  3   9   8   5   2   1   4   5   7
+         *  items[i] = 9 > 4, we'll set value at i behind pivot, then replace j to i and do j--
+         *  
+         *      i-----------j   *
+         *      |           |   |
+         *  3   1   8   5   2   4   9   5   7
+         *  nothing happen because items[i] = 3 < items[pivot] = 4  =>  i++;
+         *  
+         *          i-------j   *
+         *          |       |   |
+         *  3   1   8   5   2   4   9   5   7
+         *  items[i] = 8 > 4, we'll set value at i behind pivot, then replace j to i and do j--
+         *  
+         *          i---j   *
+         *          |   |   |
+         *  3   1   2   5   4   8   9   5   7
+         *  Here, we'll check: if (items[j] > items[pivot]) ? swap(items[j], items[pivot]) : do nothing)
+         *  
+         *              *
+         *              |
+         *  3   1   2   4   5   8   9   5   7
+         *  
+         *  Now he have 2 new arrays in the left(|3|1|2|), right(|5|8|9|5|7|) of pivot
+         *  We do exact the same way when we do with previous array.
+         *  
+         *  Result: |1|2|3|4|5|5|7|8|9|
+         */
+        #region Quick Sort
+        Random _pivotRng = new Random();
+        public void QuickSort(T[] items)
+        {
+            QuickSort(items, 0, items.Length - 1);
+        }
+
+        private void QuickSort(T[] items, int left, int right)
+        {
+            if(left < right)
+            {
+                int pivotIdx = _pivotRng.Next(left, right);
+                int newPivot = Partition(items, left, right, pivotIdx);
+
+                QuickSort(items, left, newPivot - 1);
+                QuickSort(items, newPivot + 1, right);
+            }
+        }
+
+        private int Partition(T[] items, int left, int right, int pivotIdx)
+        {
+            T pivotValue = items[pivotIdx];
+            Swap(items, pivotIdx, right);
+            int storeIdx = left;
+
+            for(int i = left; i < right; i++)
+            {
+                if(items[i].CompareTo(pivotValue) < 0)
+                {
+                    Swap(items, i, storeIdx);
+                    storeIdx += 1;
+                }
+            }
+
+            Swap(items, storeIdx, right);
+            return storeIdx;
+        }
+        #endregion
     }
 }
