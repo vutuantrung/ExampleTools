@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolClasses", "ToolClasses\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlgoExercices", "AlgoExercices\AlgoExercices.csproj", "{AEC95101-7E80-4B49-AE0B-E14D2D464618}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataStructures", "DataStructures\DataStructures.csproj", "{166AAA5C-6E91-4C5E-B637-00D0354E9C28}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataStructures", "DataStructures\DataStructures.csproj", "{166AAA5C-6E91-4C5E-B637-00D0354E9C28}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExecutingTests", "ExecutingTests\ExecutingTests.csproj", "{3C593C40-4834-4F56-8ECF-1623F4142515}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{166AAA5C-6E91-4C5E-B637-00D0354E9C28}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{166AAA5C-6E91-4C5E-B637-00D0354E9C28}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{166AAA5C-6E91-4C5E-B637-00D0354E9C28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C593C40-4834-4F56-8ECF-1623F4142515}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C593C40-4834-4F56-8ECF-1623F4142515}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C593C40-4834-4F56-8ECF-1623F4142515}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C593C40-4834-4F56-8ECF-1623F4142515}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
